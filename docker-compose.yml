@@ -5,13 +5,13 @@ services:
     container_name: mariadb
     restart: always
     environment:
-      MARIADB_ROOT_PASSWORD: example
+      MARIADB_ROOT_PASSWORD: Cambiar
       MARIADB_USER: agente
-      MARIADB_USER_PASSWORD: 0traClave
-      MARIADB_DATABASE: PEPS
+      MARIADB_USER_PASSWORD: Cambiar
+      MARIADB_DATABASE: AcademiaDeIdiomasPEPS
     volumes:
       - ./mariadb_data:/var/lib/mysql
-      - ./Juegos.sql://docker-entrypoint-initdb.d/Juegos.sql
+      - ./datos.sql:/docker-entrypoint-initdb.d/datos.sql
 
     user: mysql
   phpmyadmin:
@@ -40,8 +40,8 @@ services:
     container_name: python
     environment:
       DB_USERNAME: root
-      DB_PASSWORD: example
-      DB_DATABASE: PEPS
+      DB_PASSWORD: Cambiar
+      DB_DATABASE: AcademiaDeIdiomasPEPS
       DB_HOST: mariadb
       DB_PORT: 3306
       PORT: 8080
