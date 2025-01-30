@@ -1,3 +1,4 @@
+DROP DATABASE IF EXISTS PEPS;
 -- Crear la base de datos
 CREATE DATABASE IF NOT EXISTS PEPS;
 USE PEPS;
@@ -33,14 +34,14 @@ CREATE TABLE reservas(
     nombre_Cliente VARCHAR(255) NOT NULL,
     lugar VARCHAR(255) NOT NULL,
     precio_reserva DECIMAL(9,2) NOT NULL,
-	foto_comida_reserva VARCHAR(255)
-	id_cliente BIGINT UNSIGNED NOT NULL,
-	id_mesa BIGINT UNSIGNED NOT NULL,
+    foto_comida_reserva VARCHAR(255),
+    id_cliente BIGINT UNSIGNED NOT NULL,
+    id_mesa BIGINT UNSIGNED NOT NULL,
     fecha DATE NOT NULL,
     hora TIME NOT NULL,
     estado VARCHAR(50) DEFAULT 'pendiente',
     FOREIGN KEY (id_cliente) REFERENCES clientes(id),
-    FOREIGN KEY (id_mesa) REFERENCES mesas(id)
+    FOREIGN KEY (id_mesa) REFERENCES mesas(id_mesa)  -- Cambio aquí
 );
 
 -- Tabla de usuarios
@@ -64,10 +65,10 @@ INSERT INTO mesas (numero, capacidad, ubicacion) VALUES
 (1, 2, 'Interior'),
 (3, 4, 'Terraza');
 
-INSERT INTO platos (nombre, descripcion, precio, foto) VALUES
+INSERT INTO platos (nombre, precio, foto) VALUES
 ('Carne', 4.00, NULL),
-('Pescado', 5.00, NULL),
+('Pescado', 5.00, NULL);
 
-INSERT INTO reservas (id, id_cliente, lugar, precio_reserva, estado) VALUES
-(1, 1, '12-06-2025', '19:00', 'confirmada'),
-(2, 2, '12-06-2025', '20:00', 'pendiente');
+INSERT INTO reservas (id_cliente, id_mesa, lugar, precio_reserva, estado, fecha, hora, nombre_Cliente) VALUES
+(1, 1, 'Comedor', 19.00, 'confirmada', '2025-06-12', '19:00', 'Juan Perez'),
+(2, 2, 'Terraza', 25.00, 'pendiente', '2025-06-12', '20:00', 'Maria Lopez');
