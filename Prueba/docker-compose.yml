@@ -1,0 +1,67 @@
+version: '3.8'
+
+services:
+  apache:
+    image: httpd:latest
+    container_name: apache_server
+    ports:
+      - "7777:80"
+    volumes:
+      - ./cliente:/usr/local/apache2/htdocs/
+    depends_on:
+      - api
+    networks:
+      - mynetwork
+
+  api:
+    build: ./api
+    container_name: python_api
+    restart: always
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./api:/app
+    depends_on:
+      - mariadb
+    networks:
+      - mynetwork
+    environment:
+      - FLASK_ENV=development
+      - DB_HOST=mariadb
+      - DB_USER=root
+      - DB_PASSWORD=root
+      - DB_NAME=peps
+
+  mariadb:
+    image: mariadb:latest
+    container_name: mariadb_server
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=peps
+    volumes:
+      - mariadb_data:/var/lib/mysql
+      - ./api/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - mynetwork
+
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: phpmyadmin
+    restart: always
+    ports:
+      - "8080:80"
+    environment:
+      - PMA_HOST=mariadb
+      - MYSQL_ROOT_PASSWORD=root
+    depends_on:
+      - mariadb
+    networks:
+      - mynetwork
+
+volumes:
+  mariadb_data:
+
+networks:
+  mynetwork:
+    driver: bridge
