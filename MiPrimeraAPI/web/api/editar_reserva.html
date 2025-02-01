@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>APP WEB</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.2/css/bulma.min.css">
+    <script>
+        var myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+        var queryString = window.location.search;
+        var urlParams = new URLSearchParams(queryString);
+        var id = urlParams.get('id');
+        onload=function(){
+            obtenerDatosReserva(id);
+        }
+        function obtenerDatosReserva(id){
+            var requestOptions = {
+                method: 'GET'
+            };
+
+            fetch("/reserva/"+id, requestOptions)
+                .then(response => response.json())
+                .then(result => pintarReserva(result))
+                .catch(error => {
+                    console.log('error', error)
+                    alert("Ha habido un error al recuperar los datos de la reserva");
+                    location.href="../api/reservas.html";
+                });
+
+        }
+        function pintarReserva(reserva){
+            document.getElementById("nombre_Cliente").value=reserva.nombre_Cliente;
+            descripcion=document.getElementById("lugar").value=reserva.lugar;
+            precio=document.getElementById("precio_reserva").value=reserva.precio_reserva;
+            document.getElementById("foto_comida_reserva").value=reserva.foto_comida_reserva;
+        }
+        function guardar(){            
+            let nombre=document.getElementById("nombre_Cliente").value;
+            let descripcion=document.getElementById("lugar").value;
+            let precio=document.getElementById("precio_reserva").value;
+            let foto=document.getElementById("foto_comida_reserva").value;
+            let datos=JSON.stringify({
+                "id":id,
+                "nombre_Cliente":nombre_Cliente,
+                "lugar":lugar,
+                "precio_reserva": precio,
+                "foto_comida_reserva":foto_comida_reserva
+            });
+            var requestOptions = {
+                method: 'PUT',
+                headers: myHeaders,
+                body: datos
+            };
+
+            fetch("/juegos", requestOptions)
+                .then(response => response.json())
+                .then(result => {
+                    if (result.status == "OK"){
+                        alert("reserva modificada")
+                        location.href="../api/reservas.html"
+                    } else {
+                        alert("La reserva no ha podido ser modificada")
+                    }
+                })
+                .catch(error => {
+                    console.log('error', error);
+                    alert("Se ha producido un error y la reserva no ha podido ser modificada")
+                });
+        }
+    </script>
+</head>
+<body>
+    <nav class="navbar is-warning" role="navigation" aria-label="main navigation">
+        <div class="navbar-brand">
+            <button class="navbar-burger is-warning button" aria-label="menu" aria-expanded="false"
+                data-target="navbarBasicExample">
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+            </button>
+        </div>
+        <div class="navbar-menu">
+            <div class="navbar-start">
+                <a class="navbar-item" href="../api/reservas">Reserva</a>
+            </div>
+            <div class="navbar-end">
+                <div class="navbar-item">
+                </div>
+            </div>
+        </div>
+    </nav>
+  <section class="section">
+    <div class="columns">
+        <div class="column">
+            <h3 class="is-size-3">Editar reserva</h3>
+                <label for="nombre_Cliente">Nombre:</label>
+                <input required type="text" class="input" placeholder="Nombre" name="nombre_Cliente" id="nombre_Cliente">
+
+                <label for="lugar">lugar</label>
+                <input required type="text" class="input" placeholder="lugar" name="lugar" id="lugar">
+                
+                <label for="fecha_reserva">Fecha de Reserva:</label>
+                <input required type="date" class="input" placeholder="Fecha" name="fecha" id="fecha">
+                
+                <label for="hora_reserva">Hora de Reserva:</label>
+                <input required type="time" class="input" placeholder="Hora" name="hora" id="hora">
+                
+                <button type="button" onclick="guardar()" class="button is-success mt-2">Guardar</button>
+                <a href="../api/reservas.html" class="button is-primary mt-2">Volver</a>
+            </form>
+        </div>
+    </div>
+</section>
+</body>
+</html>
