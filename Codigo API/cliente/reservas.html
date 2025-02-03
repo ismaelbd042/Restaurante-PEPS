@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -7,37 +8,42 @@
     <title>APP WEB</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.2/css/bulma.min.css">
     <script>
-        onload=function(){
-            pedirJuegos();
+        onload = function () {
+            pedirReservas();
         }
-        function pintarJuegos(lista){
-            let tbody=document.getElementsByTagName("tbody")[0];
-            tbody.innerHTML="";
+
+        function pintarReservas(lista) {
+            let tbody = document.getElementsByTagName("tbody")[0];
+            tbody.innerHTML = "";
             lista.forEach(reserva => {
-                tbody.innerHTML+=`<tr>
+                tbody.innerHTML += `<tr>
+                        <td>${reserva.id_cliente}</td>
+                        <td>${reserva.fecha}</td>
+                        <td>${reserva.hora}</td>
                         <td>${reserva.lugar}</td>
-                        <td>${reserva.nombre_Cliente}</td>
-                        <td>${reserva.foto_comida_reserva}</td>
-                        <td>${reserva.precio_reserva}</td>
+                        <td>${reserva.precio_reserva}€</td>
+                        <td>${reserva.estado}</td>
                         <td>
                             <a href="../editar_reserva.html?id=${reserva.id}" class="button is-info">Editar</a>
                         </td>
                         <td>
                             <button class="button is-danger" onclick="eliminarReserva(${reserva.id})">Eliminar</button>
                         </td>
-            </tr>`                            
+                    </tr>`
             });
         }
-        function pedirReservas(){
+
+        function pedirReservas() {
             var requestOptions = {
                 method: 'GET'
             };
 
-            fetch("/reserva", requestOptions)
+            fetch("http://localhost:5000/reservas", requestOptions)
                 .then(response => response.json())
                 .then(result => {
-                    if (result.status){
-                        location.href="index.html";
+                    console.log(result);
+                    if (result.status) {
+                        location.href = "index.html";
                     } else {
                         pintarReservas(result);
                     }
@@ -47,15 +53,16 @@
                     alert("Ha habido un error al recuperar las reservas. Refresque la página")
                 });
         }
-        function eliminarReserva(id){
+
+        function eliminarReserva(id) {
             var requestOptions = {
                 method: 'DELETE'
             };
 
-            fetch("/reserva/"+id, requestOptions)
+            fetch("http://localhost:5000/reserva/" + id, requestOptions)
                 .then(response => response.json())
                 .then(result => {
-                    if (result.status == "OK"){
+                    if (result.status == "OK") {
                         alert("Reserva eliminada")
                         pedirReservas();
                     } else {
@@ -67,15 +74,16 @@
                     alert("Se ha producido un error y la reserva no ha podido ser eliminada")
                 });
         }
-        function cerrarSesion(){
+
+        function cerrarSesion() {
             var requestOptions = {
                 method: 'GET'
             };
-            fetch("/logout", requestOptions)
+            fetch("http://localhost:5000/logout", requestOptions)
                 .then(response => response.json())
                 .then(result => {
-                    if (result.status == "OK"){
-                        location.href="../index.html";
+                    if (result.status == "OK") {
+                        location.href = "../index.html";
                     } else {
                         alert("No se ha podido cerrar sesión")
                     }
@@ -84,10 +92,10 @@
                     console.log('error', error);
                     alert("Se ha producido un error y no se ha podido cerrar sesión")
                 });
-
         }
     </script>
 </head>
+
 <body>
     <nav class="navbar is-warning" role="navigation" aria-label="main navigation">
         <div class="navbar-brand">
@@ -118,19 +126,22 @@
                 <table class="table">
                     <thead>
                         <tr>
+                            <th>ID Cliente</th>
+                            <th>Fecha</th>
+                            <th>Hora</th>
                             <th>Lugar</th>
-                            <th>Nombre</th>
-                            <th>Foto</th>
                             <th>Precio</th>
+                            <th>Estado</th>
                             <th>Editar</th>
                             <th>Eliminar</th>
                         </tr>
                     </thead>
                     <tbody>
-                   </tbody>
+                    </tbody>
                 </table>
             </div>
-        </div>  
-    </section>    
+        </div>
+    </section>
 </body>
+
 </html>

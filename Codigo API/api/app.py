@@ -73,6 +73,24 @@ def register():
 def logout():
     return jsonify({"message": "Sesión cerrada"}), 200
 
+@app.route("/reservas", methods=["GET"])
+def listar_reservas():
+    reservas = Reserva.query.all()
+    reservas_json = [
+        {
+            "id": r.id,
+            "id_cliente": r.id_cliente,
+            "id_mesa": r.id_mesa,
+            "fecha": str(r.fecha),
+            "hora": str(r.hora),
+            "lugar": r.lugar,
+            "precio_reserva": float(r.precio_reserva),
+            "estado": r.estado
+        }
+        for r in reservas
+    ]
+    return jsonify(reservas_json)
+
 # Subida de archivos
 @app.route("/upload", methods=["POST"])
 @jwt_required()
