@@ -28,10 +28,10 @@ CREATE TABLE platos (
     foto VARCHAR(255)
 );
 
--- Tabla de reservas
+-- Tabla de reservas 
 CREATE TABLE reservas (
     id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    id_cliente BIGINT UNSIGNED NOT NULL,
+    nombre_cliente VARCHAR(255) NOT NULL,
     id_mesa BIGINT UNSIGNED NOT NULL,
     fecha DATE NOT NULL,
     hora TIME NOT NULL,
@@ -39,9 +39,9 @@ CREATE TABLE reservas (
     precio_reserva DECIMAL(9,2) NOT NULL,
     foto_comida_reserva VARCHAR(255),
     estado VARCHAR(50) DEFAULT 'pendiente',
-    FOREIGN KEY (id_cliente) REFERENCES clientes(id) ON DELETE CASCADE,
     FOREIGN KEY (id_mesa) REFERENCES mesas(id_mesa) ON DELETE CASCADE
 );
+
 
 -- Tabla de usuarios
 CREATE TABLE usuarios (
@@ -68,6 +68,6 @@ INSERT INTO platos (nombre, descripcion, precio, foto) VALUES
 ('Carne', 'Delicioso corte de res a la parrilla', 4.00, NULL),
 ('Pescado', 'Filete de pescado frito con guarnición', 5.00, NULL);
 
-INSERT INTO reservas (id_cliente, id_mesa, fecha, hora, lugar, precio_reserva, estado) VALUES
-(1, 1, '2025-06-12', '19:00', 'Interior', 20.00, 'confirmada'),
-(2, 2, '2025-06-12', '20:00', 'Terraza', 15.00, 'pendiente');
+INSERT INTO reservas (nombre_cliente, id_mesa, fecha, hora, lugar, precio_reserva, estado) VALUES
+('Juan Perez', 1, '2025-06-12', '19:00', 'Interior', 20.00, 'confirmada'),
+('Maria Lopez', 2, '2025-06-12', '20:00', 'Terraza', 15.00, 'pendiente');

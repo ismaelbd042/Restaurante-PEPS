@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -12,65 +13,83 @@
         var queryString = window.location.search;
         var urlParams = new URLSearchParams(queryString);
         var id = urlParams.get('id');
-        onload=function(){
+
+        onload = function () {
             obtenerDatosReserva(id);
         }
-        function obtenerDatosReserva(id){
+
+        function obtenerDatosReserva(id) {
             var requestOptions = {
                 method: 'GET'
             };
 
-            fetch("/reserva/"+id, requestOptions)
+            fetch("http://localhost:5000/reserva/" + id, requestOptions)
                 .then(response => response.json())
                 .then(result => pintarReserva(result))
                 .catch(error => {
                     console.log('error', error)
                     alert("Ha habido un error al recuperar los datos de la reserva");
-                    location.href="../reservas.html";
+                    location.href = "../reservas.html";
                 });
+        }
 
+        function pintarReserva(reserva) {
+            document.getElementById("nombre_cliente").value = reserva.nombre_cliente;
+            document.getElementById("lugar").value = reserva.lugar;
+            document.getElementById("precio_reserva").value = reserva.precio_reserva;
+            document.getElementById("foto_comida_reserva").value = reserva.foto_comida_reserva;
+            document.getElementById("fecha").value = reserva.fecha;
+            document.getElementById("hora").value = reserva.hora;
+            document.getElementById("estado").value = reserva.estado;
+            document.getElementById("id_cliente").value = reserva.id_cliente;
         }
-        function pintarReserva(reserva){
-            document.getElementById("nombre_Cliente").value=reserva.nombre_Cliente;
-            descripcion=document.getElementById("lugar").value=reserva.lugar;
-            precio=document.getElementById("precio_reserva").value=reserva.precio_reserva;
-            document.getElementById("foto_comida_reserva").value=reserva.foto_comida_reserva;
-        }
-        function guardar(){            
-            let nombre=document.getElementById("nombre_Cliente").value;
-            let descripcion=document.getElementById("lugar").value;
-            let precio=document.getElementById("precio_reserva").value;
-            let foto=document.getElementById("foto_comida_reserva").value;
-            let datos=JSON.stringify({
-                "id":id,
-                "nombre_Cliente":nombre_Cliente,
-                "lugar":lugar,
+
+        function guardar() {
+            let nombre_Cliente = document.getElementById("nombre_Cliente").value;
+            let lugar = document.getElementById("lugar").value;
+            let precio = document.getElementById("precio_reserva").value;
+            let foto_comida_reserva = document.getElementById("foto_comida_reserva").value;
+            let fecha = document.getElementById("fecha").value;
+            let hora = document.getElementById("hora").value;
+            let estado = document.getElementById("estado").value;
+            let id_cliente = document.getElementById("id_cliente").value;
+
+            let datos = JSON.stringify({
+                "id": id,
+                "nombre_Cliente": nombre_Cliente,
+                "lugar": lugar,
                 "precio_reserva": precio,
-                "foto_comida_reserva":foto_comida_reserva
+                "foto_comida_reserva": foto_comida_reserva,
+                "fecha": fecha,
+                "hora": hora,
+                "estado": estado,
+                "id_cliente": id_cliente
             });
+
             var requestOptions = {
                 method: 'PUT',
                 headers: myHeaders,
                 body: datos
             };
 
-            fetch("/juegos", requestOptions)
+            fetch("http://localhost:5000/reservas", requestOptions)
                 .then(response => response.json())
                 .then(result => {
-                    if (result.status == "OK"){
-                        alert("reserva modificada")
-                        location.href="../reservas.html"
+                    if (result.status == "OK") {
+                        alert("Reserva modificada");
+                        location.href = "../reservas.html";
                     } else {
-                        alert("La reserva no ha podido ser modificada")
+                        alert("La reserva no ha podido ser modificada");
                     }
                 })
                 .catch(error => {
                     console.log('error', error);
-                    alert("Se ha producido un error y la reserva no ha podido ser modificada")
+                    alert("Se ha producido un error y la reserva no ha podido ser modificada");
                 });
         }
     </script>
 </head>
+
 <body>
     <nav class="navbar is-warning" role="navigation" aria-label="main navigation">
         <div class="navbar-brand">
@@ -83,35 +102,46 @@
         </div>
         <div class="navbar-menu">
             <div class="navbar-start">
-                <a class="navbar-item" href="../reservas">Reserva</a>
-            </div>
-            <div class="navbar-end">
-                <div class="navbar-item">
-                </div>
+                <a class="navbar-item" href="../reservas">Reservas</a>
             </div>
         </div>
     </nav>
-  <section class="section">
-    <div class="columns">
-        <div class="column">
-            <h3 class="is-size-3">Editar reserva</h3>
-                <label for="nombre_Cliente">Nombre:</label>
-                <input required type="text" class="input" placeholder="Nombre" name="nombre_Cliente" id="nombre_Cliente">
+    <section class="section">
+        <div class="columns">
+            <div class="column">
+                <h3 class="is-size-3">Editar Reserva</h3>
 
-                <label for="lugar">lugar</label>
-                <input required type="text" class="input" placeholder="lugar" name="lugar" id="lugar">
-                
-                <label for="fecha_reserva">Fecha de Reserva:</label>
-                <input required type="date" class="input" placeholder="Fecha" name="fecha" id="fecha">
-                
-                <label for="hora_reserva">Hora de Reserva:</label>
-                <input required type="time" class="input" placeholder="Hora" name="hora" id="hora">
-                
+                <label for="nombre_Cliente">Nombre Cliente:</label>
+                <input required type="text" class="input" placeholder="Nombre del Cliente" name="nombre_Cliente"
+                    id="nombre_Cliente">
+
+                <label for="lugar">Lugar:</label>
+                <input required type="text" class="input" placeholder="Lugar" name="lugar" id="lugar">
+
+                <label for="fecha">Fecha de Reserva:</label>
+                <input required type="date" class="input" name="fecha" id="fecha">
+
+                <label for="hora">Hora de Reserva:</label>
+                <input required type="time" class="input" name="hora" id="hora">
+
+                <label for="precio_reserva">Precio de la Reserva (€):</label>
+                <input required type="number" class="input" name="precio_reserva" id="precio_reserva">
+
+                <label for="estado">Estado de la Reserva:</label>
+                <select id="estado" class="input">
+                    <option value="confirmada">Confirmada</option>
+                    <option value="pendiente">Pendiente</option>
+                    <option value="cancelada">Cancelada</option>
+                </select>
+
+                <label for="id_cliente">ID Cliente:</label>
+                <input required type="number" class="input" name="id_cliente" id="id_cliente" readonly>
+
                 <button type="button" onclick="guardar()" class="button is-success mt-2">Guardar</button>
                 <a href="../reservas.html" class="button is-primary mt-2">Volver</a>
-            </form>
+            </div>
         </div>
-    </div>
-</section>
+    </section>
 </body>
+
 </html>

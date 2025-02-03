@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -10,40 +11,53 @@
         var myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
 
-        function guardar(){
-            let nombre_Cliente=document.getElementById("nombre_Cliente").value;
-            let lugar=document.getElementById("lugar").value;
-            let precio_reserva=document.getElementById("precio_reserva").value;
-            let foto_comida_reserva=document.getElementById("foto_comida_reserva").value;
-            let datos=JSON.stringify({
-                "nombre_Cliente":nombre_Cliente,
-                "lugar":lugar,
+        // Función para guardar la reserva
+        function guardar() {
+            let nombre_Cliente = document.getElementById("nombre_Cliente").value;
+            let lugar = document.getElementById("lugar").value;
+            let precio_reserva = document.getElementById("precio_reserva").value;
+            let foto_comida_reserva = document.getElementById("foto_comida_reserva").value;
+            let fecha = document.getElementById("fecha").value;
+            let hora = document.getElementById("hora").value;
+
+            // Crear el objeto de datos con la información a enviar
+            let datos = JSON.stringify({
+                "nombre_Cliente": nombre_Cliente,
+                "lugar": lugar,
                 "precio_reserva": precio_reserva,
-                "foto_comida_reserva":foto_comida_reserva
+                "foto_comida_reserva": foto_comida_reserva,
+                "fecha": fecha,
+                "hora": hora
             });
+
+            console.log("Datos a enviar:", datos);
+
+            // Configurar la solicitud con método POST y los datos en el cuerpo
             var requestOptions = {
                 method: 'POST',
                 headers: myHeaders,
                 body: datos
             };
 
-            fetch("/reserva", requestOptions)
+            // Realizar la solicitud al endpoint para guardar la reserva
+            fetch("http://localhost:5000/reserva", requestOptions)
                 .then(response => response.json())
                 .then(result => {
-                    if (result.status == "OK"){
-                        alert("reserva guardada")
-                        location.href="../api/reservas.html"
+                    if (result.status == "OK") {
+                        alert("Reserva guardada con éxito");
+                        location.href = "../api/reservas.html";  // Redirigir al listado de reservas
                     } else {
-                        alert("La mesa no ha podido ser reservada")
+                        alert("La reserva no ha podido ser guardada");
                     }
                 })
                 .catch(error => {
                     console.log('error', error);
-                    alert("Se ha producido un error y la mesa no ha podido ser reservada")
+                    alert("Se ha producido un error y la reserva no ha podido ser guardada");
                 });
         }
     </script>
 </head>
+
 <body>
     <nav class="navbar is-warning" role="navigation" aria-label="main navigation">
         <div class="navbar-brand">
@@ -64,27 +78,37 @@
             </div>
         </div>
     </nav>
-  <section class="section">
-    <div class="columns">
-        <div class="column">
-            <h3 class="is-size-3">Agregar reserva</h3>
-                <label for="nombre">Nombre:</label>
-                <input required type="text" class="input" placeholder="nombre" name="nombre_Cliente" id="nombre_Cliente">
+    <section class="section">
+        <div class="columns">
+            <div class="column">
+                <h3 class="is-size-3">Agregar reserva</h3>
+                <label for="nombre_Cliente">Nombre:</label>
+                <input required type="text" class="input" placeholder="Nombre" name="nombre_Cliente"
+                    id="nombre_Cliente">
+
                 <label for="lugar">Lugar:</label>
                 <input required type="text" class="input" placeholder="Lugar" name="lugar" id="lugar">
 
-                <label for="fecha_reserva">Fecha de Reserva:</label>
+                <label for="fecha">Fecha de Reserva:</label>
                 <input required type="date" class="input" placeholder="Fecha" name="fecha" id="fecha">
-                
-                <label for="hora_reserva">Hora de Reserva:</label>
+
+                <label for="hora">Hora de Reserva:</label>
                 <input required type="time" class="input" placeholder="Hora" name="hora" id="hora">
 
+                <label for="precio_reserva">Precio:</label>
+                <input required type="number" class="input" placeholder="Precio" name="precio_reserva"
+                    id="precio_reserva">
+
+                <label for="foto_comida_reserva">Foto de comida:</label>
+                <input required type="text" class="input" placeholder="URL Foto comida" name="foto_comida_reserva"
+                    id="foto_comida_reserva">
 
                 <button type="button" onclick="guardar()" class="button is-success mt-2">Guardar</button>
                 <a href="../reservas.html" class="button is-primary mt-2">Volver</a>
-            </form>
+                </form>
+            </div>
         </div>
-    </div>
-</section>
+    </section>
 </body>
+
 </html>

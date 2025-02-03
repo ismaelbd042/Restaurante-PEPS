@@ -17,7 +17,7 @@
             tbody.innerHTML = "";
             lista.forEach(reserva => {
                 tbody.innerHTML += `<tr>
-                        <td>${reserva.id_cliente}</td>
+                        <td>${reserva.nombre_cliente}</td>
                         <td>${reserva.fecha}</td>
                         <td>${reserva.hora}</td>
                         <td>${reserva.lugar}</td>
@@ -41,7 +41,6 @@
             fetch("http://localhost:5000/reservas", requestOptions)
                 .then(response => response.json())
                 .then(result => {
-                    console.log(result);
                     if (result.status) {
                         location.href = "index.html";
                     } else {
@@ -54,6 +53,7 @@
                 });
         }
 
+        // Por terminar
         function eliminarReserva(id) {
             var requestOptions = {
                 method: 'DELETE'
@@ -76,23 +76,37 @@
         }
 
         function cerrarSesion() {
+            var token = localStorage.getItem("token"); // O cookies, según como se almacene el token
+            if (!token) {
+                alert("No hay sesión activa.");
+                return;
+            }
+
             var requestOptions = {
-                method: 'GET'
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`  // Enviamos el token en la cabecera
+                },
             };
+
             fetch("http://localhost:5000/logout", requestOptions)
                 .then(response => response.json())
                 .then(result => {
-                    if (result.status == "OK") {
-                        location.href = "../index.html";
+                    if (result.message === "Sesión cerrada") {
+                        localStorage.removeItem("token");  // Eliminar token localmente
+                        alert("Sesión cerrada correctamente.");
+                        location.href = "../index.html";  // Redirigir al login
                     } else {
-                        alert("No se ha podido cerrar sesión")
+                        alert("No se ha podido cerrar sesión.");
                     }
                 })
                 .catch(error => {
                     console.log('error', error);
-                    alert("Se ha producido un error y no se ha podido cerrar sesión")
+                    alert("Se ha producido un error y no se ha podido cerrar sesión.");
                 });
         }
+
     </script>
 </head>
 
@@ -126,7 +140,7 @@
                 <table class="table">
                     <thead>
                         <tr>
-                            <th>ID Cliente</th>
+                            <th>Nombre del cliente</th>
                             <th>Fecha</th>
                             <th>Hora</th>
                             <th>Lugar</th>
