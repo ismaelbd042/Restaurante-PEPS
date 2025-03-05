@@ -38,7 +38,7 @@
                 method: 'GET'
             };
 
-            fetch("http://localhost:5000/reservas", requestOptions)
+            fetch("/api/reservas", requestOptions)
                 .then(response => response.json())
                 .then(result => {
                     if (result.status) {
@@ -59,7 +59,7 @@
                 method: 'DELETE'
             };
 
-            fetch("http://localhost:5000/reserva/" + id, requestOptions)
+            fetch("/api/reserva/" + id, requestOptions)
                 .then(response => response.json())
                 .then(result => {
                     if (result.status == "OK") {
@@ -90,7 +90,7 @@
                 },
             };
 
-            fetch("http://localhost:5000/logout", requestOptions)
+            fetch("/api/logout", requestOptions)
                 .then(response => response.json())
                 .then(result => {
                     if (result.message === "Sesión cerrada") {
