@@ -19,7 +19,7 @@
             const usuario = document.getElementById("username").value;
             const clave = document.getElementById("password").value;
 
-            fetch("http://localhost:5000/login", {  // Asegurar que la URL apunta a la API
+            fetch("/api/login", {  // Asegurar que la URL apunta a la API
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ usuario, clave })  // Nombres correctos según API
