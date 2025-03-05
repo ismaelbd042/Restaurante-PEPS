@@ -17,7 +17,7 @@
                 body: formData
             };
 
-            fetch("/upload", requestOptions)
+            fetch("/api/upload", requestOptions)
                 .then(response => response.json())
                 .then(result => {
                     if (result.status == "OK"){
