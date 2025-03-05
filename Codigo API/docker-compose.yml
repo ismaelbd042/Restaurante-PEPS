@@ -5,7 +5,7 @@ services:
     image: httpd:latest
     container_name: apache_server
     ports:
-      - "7777:80"
+      - "6009:80"
     volumes:
       - ./cliente:/usr/local/apache2/htdocs/
     depends_on:
@@ -17,8 +17,6 @@ services:
     build: ./api
     container_name: python_api
     restart: always
-    ports:
-      - "5000:5000"
     volumes:
       - ./api:/app
     depends_on:
@@ -50,7 +48,7 @@ services:
     container_name: phpmyadmin
     restart: always
     ports:
-      - "8080:80"
+      - "7009:80"
     environment:
       - PMA_HOST=mariadb
       - MYSQL_ROOT_PASSWORD=root
