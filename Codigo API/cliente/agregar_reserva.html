@@ -40,7 +40,7 @@
             };
 
             // Realizar la solicitud al endpoint para guardar la reserva
-            fetch("http://localhost:5000/reserva", requestOptions)
+            fetch("/api/reserva", requestOptions)
                 .then(response => response.json())
                 .then(result => {
                     if (result.status == "OK") {
