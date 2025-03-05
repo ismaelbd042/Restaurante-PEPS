@@ -23,7 +23,7 @@
                 method: 'GET'
             };
 
-            fetch("http://localhost:5000/reserva/" + id, requestOptions)
+            fetch("/api/reserva/" + id, requestOptions)
                 .then(response => response.json())
                 .then(result => pintarReserva(result))
                 .catch(error => {
@@ -72,7 +72,7 @@
                 body: datos
             };
 
-            fetch("http://localhost:5000/reservas", requestOptions)
+            fetch("/api/reservas", requestOptions)
                 .then(response => response.json())
                 .then(result => {
                     if (result.status == "OK") {
