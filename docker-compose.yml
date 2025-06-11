@@ -1,0 +1,77 @@
+version: '3.8'
+services:
+  python:
+    build: .
+    container_name: pythona9
+    restart: always
+    depends_on:
+      - mariadb
+    links:
+      - mariadb
+    env_file: .env
+    environment:
+      DB_PORT: 3306
+      DB_HOST: mariadb
+      DB_DATABASE: ciber
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      SECRET_KEY: ${SECRET_KEY}
+      WTF_CSRF_SECRET_KEY: ${WTF_CSRF_SECRET_KEY}       
+      HOST: "0.0.0.0"
+      PORT: 8080
+    volumes:
+      - ./logapi/:/app/logs
+
+  mariadb:
+    image: mariadb:10.3
+    container_name: mariadb_servera9
+    restart: always
+    environment:
+      MYSQL_DATABASE: ciber
+      MARIADB_ROOT_PASSWORD_FILE: /run/secrets/db_root_password
+    volumes:
+      - mariadb_servera9:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    secrets:
+      - db_root_password
+  
+  phpmyadmin:
+    image: phpmyadmin
+    container_name: phpmyadmina9
+    restart: always
+    ports:
+      - 7009:80
+    environment:
+      PMA_ARBITRARY: 1
+      PMA_HOST: mariadb
+    links:
+      - mariadb
+    depends_on:
+      - mariadb
+
+  apache-waf:
+    build: ./apache/
+    container_name: apachewafa9 
+    ports:
+      - 6019:443
+      - 6009:80
+    depends_on:
+      - python
+    links:
+      - python
+    volumes:
+      - ./apache/static:/var/www/html 
+      - ./logwaf:/var/log/apache2
+
+secrets:
+  db_root_user:
+    file: ./secretos/db_root_user.txt
+  db_root_password:
+    file: ./secretos/db_root_password.txt
+  db_user_username:
+    file: ./secretos/db_user_username.txt
+  db_user_password:
+    file: ./secretos/db_user_password.txt
+
+volumes:
+  mariadb_servera9:
